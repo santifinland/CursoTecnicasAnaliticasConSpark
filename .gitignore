@@ -15,3 +15,13 @@ project/plugins/project/
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
+
+# IntelliJ
+*.iml
+.idea/
+
+# Compiled Python
+*.pyc
+
+# Zipped files
+*.zip
