@@ -25,3 +25,17 @@ project/plugins/project/
 
 # Zipped files
 *.zip
+
+RegressionR/.RData
+RegressionR/.Rhistory
+RegressionR/.Rproj.user
+RegressionR/DistritosCatastroPP.png
+RegressionR/LogisticExam.png
+RegressionR/PuntosCatastroPP.png
+RegressionR/RegresionLinealExamen.png
+RegressionR/RegressionR.Rproj
+data/Catalogo_peliculas.csv
+data/HOUSEHOLD_MASTER.csv
+data/ratings.csv
+
+
