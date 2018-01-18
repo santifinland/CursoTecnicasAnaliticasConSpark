@@ -22,7 +22,7 @@ def main():
     # Create Spark Session
     spark = SparkSession.builder.appName("Edu").getOrCreate()
 
-    base_dir = os.path.join('../data')
+    base_dir = os.path.join('../data/peliculas')
     input_path = os.path.join('Catalogo_peliculas.csv')
     films_file = os.path.join(base_dir, input_path)
 
