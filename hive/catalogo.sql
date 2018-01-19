@@ -1,4 +1,4 @@
-CREATE EXTERNAL TABLE catalogo (
+CREATE EXTERNAL TABLE test.catalogo (
   content_title STRING,
   content_sub_title STRING,
   external_asse_id STRING,
