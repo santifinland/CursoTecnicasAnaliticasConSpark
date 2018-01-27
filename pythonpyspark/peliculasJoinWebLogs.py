@@ -34,7 +34,9 @@ def main():
     web_logs = spark.read.option("header", "true").csv(weblogs_file)
     print 'Web logs example %s' % web_logs.show(5)
 
-    films.join(web_logs, on="EXTERNAL_ASSET_ID", how="inner").show()
+    cruces = films.join(web_logs, on="EXTERNAL_ASSET_ID", how="inner")
+    cruces.write.csv("salida.txt")
+    cruces.show()
 
 
 if __name__ == "__main__":

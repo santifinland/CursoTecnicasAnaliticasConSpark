@@ -8,12 +8,12 @@ import logging
 from itertools import chain
 
 import pandas as pd
-from pyspark import SparkConf, SparkContext
-from pyspark.sql import SQLContext
+from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 from pyspark.mllib.linalg.distributed import *
 from pyspark.sql import DataFrame
 from pyspark.mllib.linalg import Vectors
+from pyspark.ml.feature import VectorAssembler
 
 from common.LoadElections import LoadElections
 from common.logger_configuration import LoggerManager
@@ -30,26 +30,34 @@ def main():
 
     logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
-    # Create Spark context
-    conf = SparkConf().setMaster("local").setAppName("Esic")
-    sc = SparkContext(conf=conf)
-    sql_context = SQLContext(sc)
+    # Create Spark Session
+    spark = SparkSession.builder.appName("Edu").getOrCreate()
 
     # Read data
-    elections = LoadElections().train(sql_context)
+    elections = LoadElections().train(spark)
 
     # Covariance matrix
+    elections.show()
+
+
     h = centered_matrix(elections).drop("Distrito")
     ht = transpose(h)
     s = as_block_matrix(ht).multiply(as_block_matrix(h))
     s_np = s.toLocalMatrix().toArray()
-    s = sql_context.createDataFrame(pd.DataFrame(s_np, columns=elections.columns[1:]))
+    s = spark.sql.createDataFrame(pd.DataFrame(s_np, columns=elections.columns[1:]))
     s.repartition(1) \
         .write \
-        .format("com.databricks.spark.csv") \
         .option("header", "true") \
         .option("delimiter", "|") \
-        .save("/tmp/cov/")
+        .csv("/tmp/cov/")
+
+
+def covariance_matrix(df):
+    df.show()
+    h = centered_matrix(df)
+    ht = transpose(h)
+    s = as_block_matrix(ht).multiply(as_block_matrix(h))
+    return s
 
 
 def centered_matrix(df):
@@ -94,10 +102,15 @@ def transpose(X):
 
 
 def as_block_matrix(df, rowsPerBlock=1, colsPerBlock=1):
-    rdd = df.map(lambda data: Vectors.dense([float(c) for c in data]))
+    #rdd = df.rdd.map(lambda data: Vectors.dense([float(int(c)) for c in data]))
+    assembler = VectorAssembler(
+        inputCols=df.columns, outputCol="features"
+    )
+    rdd = assembler.transform(df)
     return IndexedRowMatrix(
         rdd.zipWithIndex().map(lambda xi: IndexedRow(xi[1], xi[0]))
     ).toBlockMatrix(rowsPerBlock, colsPerBlock)
+
 
 if __name__ == "__main__":
     try:

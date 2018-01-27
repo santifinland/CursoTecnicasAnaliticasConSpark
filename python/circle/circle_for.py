@@ -17,7 +17,7 @@ def is_numeric(x):
 
 
 print("Programa de cálculo de la circunferencia de un círculo dado su radio")
-radio = raw_input("¿Radio del círculo? ")
+radio = float(raw_input("¿Radio del círculo? "))
 print(radio)
 if is_numeric(radio) == True:
     for i in range(0, int(float(radio))):  # for <variable> in <sequence>:
