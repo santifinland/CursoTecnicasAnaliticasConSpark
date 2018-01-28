@@ -13,7 +13,7 @@ class LoadElections(object):
 
     electionsTrainPath = "../../data/EleccionesTrainMadrid2016.csv"
     electionsTrainPathLibSvm = "../../data/EleccionesLibSvm.txt"
-    electionsTestPath = "data/EleccionesTestMadrid2016.csv"
+    electionsTestPath = "../../data/EleccionesTestMadrid2016.csv"
     electionsPath = "../../data/EleccionesMadrid2016.csv"
 
     def train(self, spark):
