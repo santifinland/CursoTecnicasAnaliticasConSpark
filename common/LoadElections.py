@@ -14,6 +14,7 @@ class LoadElections(object):
     electionsTrainPath = "../../data/EleccionesTrainMadrid2016.csv"
     electionsTrainPathLibSvm = "../../data/EleccionesLibSvm.txt"
     electionsTestPath = "data/EleccionesTestMadrid2016.csv"
+    electionsPath = "../../data/EleccionesMadrid2016.csv"
 
     def train(self, spark):
         return self.run(spark, self.electionsTrainPath)
@@ -21,13 +22,16 @@ class LoadElections(object):
     def test(self, spark):
         return self.run(spark, self.electionsTestPath)
 
-    def run(self, spark, path):
+    def all(self, spark, header="true"):
+        return self.run(spark, self.electionsPath, header)
+
+    def run(self, spark, path, header="true"):
 
         self.logger.info(u"Process Load Elections")
 
         return spark \
             .read \
-            .option("header", "true") \
+            .option("header", header) \
             .option("delimiter", ",") \
             .option("inferSchema", "true") \
             .csv(path)
