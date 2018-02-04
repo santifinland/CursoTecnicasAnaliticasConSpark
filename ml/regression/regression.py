@@ -6,15 +6,14 @@ Técnicas analíticas con Spark y modelado predictivo
 
 import logging
 
-from pyspark import SparkConf, SparkContext
-from pyspark.sql import SQLContext
-from pyspark.sql.functions import *
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.feature import VectorAssembler
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import *
 
-from common.LoadElections import LoadElections
-from common.LoadCatastro import LoadCatastro
-from common.logger_configuration import LoggerManager
+from LoadElections import LoadElections
+from LoadCatastro import LoadCatastro
+from logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -82,18 +81,18 @@ def predict(sql_context, model):
 def sumvar(*cols):
     return reduce(lambda a, b: a + b, cols)
 
+
 if __name__ == "__main__":
     try:
 
-        # Create Spark context
-        conf = SparkConf().setMaster("local").setAppName("Esic")
-        sc = SparkContext(conf=conf)
-        sql_context = SQLContext(sc)
-
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
-        model = train(sql_context)
-        predict(sql_context, model)
+        # Create Spark session
+        spark = SparkSession.builder.appName("Edu").getOrCreate()
+
+        model = train(spark)
+
+        predict(spark, model)
 
     except Exception, e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)

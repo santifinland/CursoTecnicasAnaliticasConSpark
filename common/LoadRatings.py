@@ -11,7 +11,7 @@ class LoadRatings(object):
 
     logger = logging.getLogger()
 
-    path = "data/ratings.csv"
+    path = "../../data/ratings.csv"
 
     def run(self, sql_context):
 

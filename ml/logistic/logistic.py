@@ -88,7 +88,7 @@ if __name__ == "__main__":
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
         # Create Spark session
-        spark = SparkSession.builder.appName("Educ").getOrCreate()
+        spark = SparkSession.builder.appName("Edu").getOrCreate()
 
         model = train(spark)
         predict(spark, model)

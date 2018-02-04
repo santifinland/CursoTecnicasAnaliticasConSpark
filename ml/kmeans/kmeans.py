@@ -7,16 +7,15 @@ Técnicas analíticas con Spark y modelado predictivo
 import logging
 from itertools import chain
 
-from pyspark import SparkConf, SparkContext
-from pyspark.sql import SQLContext
 from pyspark.sql.types import *
 from pyspark.sql import DataFrame
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import StandardScaler
+from pyspark.sql import SparkSession
 
-from common.LoadParties import LoadParties
-from common.logger_configuration import LoggerManager
+from LoadParties import LoadParties
+from logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -58,7 +57,7 @@ def train(sql_context):
     df = assembler.transform(parties)
 
     scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures",
-                            withStd=True, withMean=True)
+                            withStd=True, withMean=False)
 
     # Compute summary statistics by fitting the StandardScaler
     scalerModel = scaler.fit(df)
@@ -103,7 +102,7 @@ def predict(sql_context, model):
     df = assembler.transform(parties)
 
     scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures",
-                           withStd=True, withMean=True)
+                            withStd=True, withMean=False)
 
     # Compute summary statistics by fitting the StandardScaler
     scalerModel = scaler.fit(df)
@@ -123,7 +122,7 @@ def predict(sql_context, model):
 
 def _sort_transpose_tuple(tup):
     x, y = tup
-    return (x, zip(*sorted(y, key=lambda (v,k): k, reverse=False))[0])
+    return x, zip(*sorted(y, key=lambda (v,k): k, reverse=False))[0]
 
 
 def to_int(col):
@@ -154,17 +153,17 @@ def transpose(X):
         lambda (grp,res): _sort_transpose_tuple((grp,res))).map( # maintain order
         lambda (key,col): col).toDF() # return to DF
 
+
 if __name__ == "__main__":
     try:
-        # Create Spark context
-        conf = SparkConf().setMaster("local").setAppName("Esic")
-        sc = SparkContext(conf=conf)
-        sql_context = SQLContext(sc)
 
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
-        model = train(sql_context)
-        predict(sql_context, model)
+        # Create Spark Session
+        spark = SparkSession.builder.appName("Edu").getOrCreate()
+
+        model = train(spark)
+        predict(spark, model)
 
     except Exception, e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
