@@ -31,7 +31,7 @@ def train(spark):
     numeric_columns = elections_raw.columns[1:]
     elections_max = elections_raw \
         .withColumn("max", getmax(*[elections_raw[x] for x in numeric_columns]))
-    elections =  elections_max \
+    elections = elections_max \
         .withColumn("label", when(elections_max.max == elections_max.PP, 1).otherwise(0)) \
         .select("Distrito", "label")
 
@@ -66,7 +66,7 @@ def predict(spark, model):
     numeric_columns = elections_raw.columns[1:]
     elections_max = elections_raw \
         .withColumn("max", getmax(*[elections_raw[x] for x in numeric_columns]))
-    elections =  elections_max \
+    elections = elections_max \
         .withColumn("label", when(elections_max.max == elections_max.PP, 1).otherwise(0)) \
         .select("Distrito", "label")
     elections.show()
@@ -88,10 +88,10 @@ if __name__ == "__main__":
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
         # Create Spark session
-        spark = SparkSession.builder.appName("Edu").getOrCreate()
+        spark_session = SparkSession.builder.appName("Edu").getOrCreate()
 
-        model = train(spark)
-        predict(spark, model)
+        model_trained = train(spark_session)
+        predict(spark_session, model_trained)
 
     except Exception, e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)

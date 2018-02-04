@@ -33,9 +33,10 @@ def train(sql_context):
     numeric_columns = elections_raw.columns[1:]
     elections_total = elections_raw \
         .withColumn("total", add(*[elections_raw[x] for x in numeric_columns]))
-    elections =  elections_total \
+    elections = elections_total \
         .withColumn("label", elections_total.PP / elections_total.total) \
         .select("Distrito", "label")
+    elections.show()
 
     # Read Catastro data
     catastro = LoadCatastro().train(sql_context).select(
@@ -52,8 +53,8 @@ def train(sql_context):
     # Create model
     lr = LinearRegression(maxIter=5, regParam=0.0, solver="normal")
     model = lr.fit(assembled_df)
-    logger.info(u"Elecciones. Regresión PP-Catastro: {}".format(model.intercept))
-    logger.info(u"Elecciones. Regresión PP-Catastro: {}".format(model.coefficients))
+    logger.info(u"Elecciones. Regresión PP-Catastro. Intercept: {}".format(model.intercept))
+    logger.info(u"Elecciones. Regresión PP-Catastro. Coefficients: {}".format(model.coefficients))
 
     return model
 
@@ -66,7 +67,7 @@ def predict(sql_context, model):
     numeric_columns = elections_raw.columns[1:]
     elections_total = elections_raw \
         .withColumn("total", add(*[elections_raw[x] for x in numeric_columns]))
-    elections =  elections_total \
+    elections = elections_total \
         .withColumn("label", elections_total.PP / elections_total.total) \
         .select("Distrito", "label")
     elections.show()
@@ -90,9 +91,9 @@ if __name__ == "__main__":
         # Create Spark session
         spark = SparkSession.builder.appName("Edu").getOrCreate()
 
-        model = train(spark)
+        model_trained = train(spark)
 
-        predict(spark, model)
+        predict(spark, model_trained)
 
     except Exception, e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
