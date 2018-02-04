@@ -73,9 +73,9 @@ if __name__ == "__main__":
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
         # Create Spark Session
-        spark = SparkSession.builder.appName("Edu").getOrCreate()
+        spark_session = SparkSession.builder.appName("Edu").getOrCreate()
 
-        train(spark)
+        train(spark_session)
 
     except Exception, e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)

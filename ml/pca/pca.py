@@ -57,34 +57,34 @@ def train(spark):
     result.show(truncate=False)
 
 
-def transpose(X):
+def transpose(x):
     """Transpose a PySpark DataFrame.
 
     Parameters
     ----------
-    X : PySpark ``DataFrame``
+    x : PySpark ``DataFrame``
         The ``DataFrame`` that should be tranposed.
     """
     # validate
-    if not isinstance(X, DataFrame):
+    if not isinstance(x, DataFrame):
         raise TypeError('X should be a DataFrame, not a %s'
-                        % type(X))
+                        % type(x))
 
-    cols = X.columns
+    cols = x.columns
     n_features = len(cols)
 
     # Sorry for this unreadability...
-    return X.rdd.flatMap( # make into an RDD
-        lambda xs: chain(xs)).zipWithIndex().groupBy( # zip index
-        lambda (val,idx): idx % n_features).sortBy( # group by index % n_features as key
-        lambda (grp,res): grp).map( # sort by index % n_features key
-        lambda (grp,res): _sort_transpose_tuple((grp,res))).map( # maintain order
-        lambda (key,col): col).toDF() # return to DF
+    return x.rdd.flatMap(  # make into an RDD
+        lambda xs: chain(xs)).zipWithIndex().groupBy(  # zip index
+        lambda (val, idx): idx % n_features).sortBy(  # group by index % n_features as key
+        lambda (grp, res): grp).map(  # sort by index % n_features key
+        lambda (grp, res): _sort_transpose_tuple((grp, res))).map(  # maintain order
+        lambda (key, col): col).toDF()  # return to DF
 
 
 def _sort_transpose_tuple(tup):
     x, y = tup
-    return (x, zip(*sorted(y, key=lambda (v,k): k, reverse=False))[0])
+    return x, zip(*sorted(y, key=lambda (v, k): k, reverse=False))[0]
 
 
 if __name__ == "__main__":
