@@ -6,16 +6,14 @@ Técnicas analíticas con Spark y modelado predictivo
 
 import logging
 
-from pyspark import SparkConf, SparkContext
-from pyspark.sql import SQLContext
-from pyspark.sql.functions import *
 from pyspark.ml import Pipeline
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.feature import StringIndexer, VectorIndexer
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.sql import SparkSession
 
-from common.LoadElections import LoadElections
-from common.logger_configuration import LoggerManager
+from LoadElections import LoadElections
+from logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -25,19 +23,18 @@ logger_spark = logging.getLogger('py4j')
 logger_spark.setLevel(logging.INFO)
 
 
-def train(sql_context):
-
-    logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
+def train(spark):
 
     # Read Elections data in libsvm format
-    data = LoadElections().libsvm(sql_context)
+    data = LoadElections().libsvm(spark)
 
     # Index labels, adding metadata to the label column.
     # Fit on whole dataset to include all labels in index.
-    labelIndexer = StringIndexer(inputCol="label", outputCol="indexedLabel").fit(data)
+    label_indexer = StringIndexer(inputCol="label", outputCol="indexedLabel").fit(data)
+
     # Automatically identify categorical features, and index them.
     # We specify maxCategories so features with > 4 distinct values are treated as continuous.
-    featureIndexer = \
+    feature_indexer = \
         VectorIndexer(inputCol="features", outputCol="indexedFeatures", maxCategories=4).fit(data)
 
     # Split the data into training and test sets (30% held out for testing)
@@ -49,7 +46,7 @@ def train(sql_context):
     dt = DecisionTreeClassifier(labelCol="indexedLabel", featuresCol="indexedFeatures")
 
     # Chain indexers and tree in a Pipeline
-    pipeline = Pipeline(stages=[labelIndexer, featureIndexer, dt])
+    pipeline = Pipeline(stages=[label_indexer, feature_indexer, dt])
 
     # Train model.  This also runs the indexers.
     model = pipeline.fit(trainingData)
@@ -66,20 +63,19 @@ def train(sql_context):
     accuracy = evaluator.evaluate(predictions)
     print("Test Error = %g " % (1.0 - accuracy))
 
-    treeModel = model.stages[2].toDebugString
-    print(treeModel)
+    tree_model = model.stages[2].toDebugString
+    print(tree_model)
 
 
 if __name__ == "__main__":
     try:
-        # Create Spark context
-        conf = SparkConf().setMaster("local").setAppName("Esic")
-        sc = SparkContext(conf=conf)
-        sql_context = SQLContext(sc)
 
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
-        model = train(sql_context)
+        # Create Spark Session
+        spark = SparkSession.builder.appName("Edu").getOrCreate()
+
+        train(spark)
 
     except Exception, e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)

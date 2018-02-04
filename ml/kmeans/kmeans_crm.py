@@ -5,18 +5,14 @@ Técnicas analíticas con Spark y modelado predictivo
 """
 
 import logging
-from itertools import chain
 
-from pyspark import SparkConf, SparkContext
-from pyspark.sql import SQLContext
-from pyspark.sql.types import *
-from pyspark.sql import DataFrame
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import StringIndexer
+from pyspark.sql import SparkSession
 
-from common.LoadCrm import LoadCrm
-from common.logger_configuration import LoggerManager
+from LoadCrm import LoadCrm
+from logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -63,14 +59,12 @@ def run(sql_context):
 
 if __name__ == "__main__":
     try:
-        # Create Spark context
-        conf = SparkConf().setMaster("local").setAppName("Esic")
-        sc = SparkContext(conf=conf)
-        sql_context = SQLContext(sc)
-
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
-        model = run(sql_context)
+        # Create Spark Session
+        spark = SparkSession.builder.appName("Edu").getOrCreate()
+
+        run(spark)
 
     except Exception, e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)

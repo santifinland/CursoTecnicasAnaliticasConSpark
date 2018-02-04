@@ -11,8 +11,8 @@ class LoadParties(object):
 
     logger = logging.getLogger()
 
-    partiesTrainPath = "data/partiesTrain.csv"
-    partiesTestPath = "data/partiesTest.csv"
+    partiesTrainPath = "../../data/partiesTrain.csv"
+    partiesTestPath = "../../data/partiesTest.csv"
 
     def train(self, sql_context):
         return self.run(sql_context, self.partiesTrainPath)

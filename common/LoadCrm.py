@@ -11,11 +11,11 @@ class LoadCrm(object):
 
     logger = logging.getLogger()
 
-    path = "data/HOUSEHOLD_MASTER.csv"
+    path = "../../data/HOUSEHOLD_MASTER.csv"
 
     def run(self, sql_context):
 
-        self.logger.info(u"Process Load Parties")
+        self.logger.info(u"Process Load CRM")
 
         return sql_context \
             .read \
