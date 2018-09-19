@@ -1,0 +1,6 @@
+# virtualenv .virtualenv/cursoSpark
+# source .virtualenv/cursoSpark/bin/activate
+# pip install -r requirements.txt
+# pip freeze
+
+pyspark
