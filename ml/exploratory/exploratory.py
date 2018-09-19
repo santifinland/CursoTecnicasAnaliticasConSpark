@@ -85,6 +85,7 @@ def main():
     numeric_columns = elections.columns[1:]
     assembler = VectorAssembler(inputCols=numeric_columns, outputCol="features")
     elections = assembler.transform(elections)
+    elections.show()
     r1 = Correlation.corr(elections, 'features', 'pearson').head()[0]
     spark.sparkContext.parallelize(r1.toArray()) \
         .map(lambda x: [float(i) for i in x]) \
