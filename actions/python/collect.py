@@ -14,7 +14,7 @@ def main():
     spark = SparkSession.builder.appName("Spark Course. Collect data").getOrCreate()
 
     # Read csv
-    path = os.path.join("..", "..", "data", "EleccionesMadrid2016.csv")
+    path = os.path.join("data", "EleccionesMadrid2016.csv")
     elections = spark.read.csv(path, header=True, inferSchema=True)
 
     # Show data
