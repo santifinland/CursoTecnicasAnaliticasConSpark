@@ -50,8 +50,8 @@ LOG_CONFIG = {
             'filename': 'esic.log',
             'mode': 'w',
             'formatter': 'simple',
-            'maxBytes': '10485760',
-            'backupCount': '5'
+            'maxBytes': 10485760,
+            'backupCount': 5
         },
     },
     'root': {
