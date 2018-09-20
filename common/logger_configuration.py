@@ -50,7 +50,7 @@ LOG_CONFIG = {
             'filename': 'esic.log',
             'mode': 'w',
             'formatter': 'simple',
-            'maxBytes': '10*1024*1024',
+            'maxBytes': '10485760',
             'backupCount': '5'
         },
     },
@@ -88,3 +88,10 @@ class LoggerManager(object):
 
         # Config logger
         logging.config.dictConfig(LOG_CONFIG)
+
+
+# Get application logger
+LoggerManager()
+logger = logging.getLogger()
+logger_spark = logging.getLogger('py4j')
+logger_spark.setLevel(logging.INFO)
