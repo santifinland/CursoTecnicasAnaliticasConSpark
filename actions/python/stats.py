@@ -14,7 +14,7 @@ def main():
     spark = SparkSession.builder.appName("Spark Course. Compute stats").getOrCreate()
 
     # Read csv
-    path = os.path.join("..", "..", "data", "EleccionesMadrid2016.csv")
+    path = os.path.join("data", "EleccionesMadrid2016.csv")
     elections = spark.read.csv(path, header=True, inferSchema=True)
 
     # Compute number of rows

@@ -14,7 +14,7 @@ def main():
     spark = SparkSession.builder.appName("Spark Course. Accumulators combined usage").getOrCreate()
 
     # Read csv
-    path = os.path.join("..", "..", "data", "CatastroMadrid2014.csv")
+    path = os.path.join("data", "CatastroMadrid2014.csv")
     cadastre = spark.read.csv(path, header=True, inferSchema=True)
 
     # Compute number of districts with average land price about 100 and 150 euros / squared meter
