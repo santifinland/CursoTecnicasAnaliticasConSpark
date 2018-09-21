@@ -1,18 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import os
 
 from pyspark.sql import SparkSession
 
-from common.logger_configuration import LoggerManager
-
-
-# Get application logger
-LoggerManager()
-logger = logging.getLogger()
-logger_spark = logging.getLogger('py4j')
-logger_spark.setLevel(logging.INFO)
+from common.logger_configuration import logger
 
 
 def main():
@@ -22,7 +14,7 @@ def main():
     spark = SparkSession.builder.appName("Spark Course. Csv files infer schema").getOrCreate()
 
     # Read csv infering schema
-    path = os.path.join("..", "..", "data", "EleccionesMadrid2016.csv")
+    path = os.path.join("data", "EleccionesMadrid2016.csv")
     elections = spark.read.csv(path, header=True, inferSchema=True)
     elections.show()
     elections.printSchema()
@@ -32,5 +24,5 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except Exception, e:
+    except Exception as e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
