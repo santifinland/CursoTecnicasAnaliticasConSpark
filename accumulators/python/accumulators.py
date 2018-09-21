@@ -30,7 +30,7 @@ def main():
 
 
 def acc(x, condition):
-    for k, v in condition.iteritems():
+    for k, v in condition.items():
         if k(x):
             v.add(1)
 

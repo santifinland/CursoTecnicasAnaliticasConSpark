@@ -1,19 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import os
 
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 
-from common.logger_configuration import LoggerManager
-
-
-# Get application logger
-LoggerManager()
-logger = logging.getLogger()
-logger_spark = logging.getLogger('py4j')
-logger_spark.setLevel(logging.INFO)
+from common.logger_configuration import logger
 
 
 def main():
@@ -43,7 +35,7 @@ def main():
         StructField("Blanco", IntegerType(), True)])
 
     # Read csv injecting schema
-    path = os.path.join("..", "..", "data", "EleccionesMadrid2016.csv")
+    path = os.path.join("data", "EleccionesMadrid2016.csv")
     elections = spark.read.csv(path, header=True, schema=schema)
     elections.show()
     elections.printSchema()
@@ -52,5 +44,5 @@ def main():
 if __name__ == "__main__":
     try:
         main()
-    except Exception, e:
+    except Exception as e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
