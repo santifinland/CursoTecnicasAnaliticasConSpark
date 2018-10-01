@@ -20,6 +20,7 @@ def main():
 
     # Compute number of rows
     elections.count()
+    elections.show()
 
     # Comput max of a selected column
     max_agg = elections.agg(pyspark_max(elections.PP))
