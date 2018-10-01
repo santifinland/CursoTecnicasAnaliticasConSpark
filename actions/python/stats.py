@@ -3,6 +3,7 @@
 import os
 
 from pyspark.sql import SparkSession
+from pyspark.sql.functions import max as pyspark_max
 
 from common.logger_configuration import logger
 
@@ -21,7 +22,8 @@ def main():
     elections.count()
 
     # Comput max of a selected column
-    elections.agg()
+    max_agg = elections.agg(pyspark_max(elections.PP))
+    max_agg.show()
 
 
 if __name__ == "__main__":
