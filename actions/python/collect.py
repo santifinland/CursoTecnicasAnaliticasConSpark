@@ -22,21 +22,21 @@ def main():
 
     # Take data
     e1 = elections.take(5)
-    print(type(e1))
-    print(len(e1))
+    logger.info("Tipo de dato obtenido con take: {}".format(type(e1)))
+    logger.info("Daatos recogidos: {}".format(len(e1)))
     for item in e1:
-        print(item)
+        logger.info(item)
 
     # Collect all data
     e2 = elections.collect()
-    print(type(e2))
-    print(len(e2))
+    logger.info("Tipo de dato obtenido con collect: {}".format(type(e2)))
+    logger.info("Daatos recogidos: {}".format(len(e2)))
     for item in e2:
-        print(item)
+        logger.info(item)
 
 
 if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)

@@ -26,11 +26,13 @@ def main():
     logger.info("Líneas de la canción del pirata: {}".format(count))
 
     # Count word frequency
-    counts = text_file.flatMap(lambda line: line.split(" ")) \
-        .map(lambda word: (word, 1)) \
-        .reduceByKey(lambda a, b: a + b)
-    print(elections_rdd.count())
-    #print(elections.collect())
+    counts = (lines
+              .flatMap(lambda line: line.split(" "))
+              .map(lambda word: (word, 1))
+              .reduceByKey(lambda a, b: a + b)
+              .sortBy(lambda r: -r[1]))
+
+    logger.info("Frecuencia de palabras: {}".format(counts.collect()))
 
     # Map and filter data
     #pp_over_100 = elections_rdd.map(lambda Row(distrito, pp): pp).filter(lambda pp: pp > 100)
