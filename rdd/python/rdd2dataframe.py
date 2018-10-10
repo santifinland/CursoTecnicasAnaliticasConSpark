@@ -27,7 +27,6 @@ def main():
     parallelized_primes_df.show()
 
 
-
 if __name__ == "__main__":
     try:
         main()

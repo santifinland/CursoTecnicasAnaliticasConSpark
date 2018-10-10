@@ -9,7 +9,7 @@ from common.logger_configuration import logger
 
 
 def main():
-    logger.info(u"Read csv files")
+    logger.info(u"Actions")
 
     # Create Spark Session
     spark = SparkSession.builder.appName("Spark Course. Compute stats").getOrCreate()
@@ -22,7 +22,7 @@ def main():
     elections.count()
     elections.show()
 
-    # Comput max of a selected column
+    # Compute max of a selected column
     max_agg = elections.agg(pyspark_max(elections.PP))
     max_agg.show()
 
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)
