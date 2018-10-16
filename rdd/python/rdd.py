@@ -2,8 +2,6 @@
 
 import os
 
-from pyspark import RDD, Row
-from pyspark.rdd import PipelinedRDD
 from pyspark.sql import SparkSession
 
 from common.logger_configuration import logger
@@ -17,13 +15,31 @@ def main():
 
     # Read text
     path = os.path.join("data", "pirata.txt")
-    pirata: RDD = spark.read.text(path).rdd
-    lines: PipelinedRDD = pirata.map(lambda r: r[0])
+    pirata = spark.read.text(path).rdd
+    lines = pirata.map(lambda r: r[0])
     logger.info("Cancion del pirata: {}".format(lines.take(6)))
 
     # Count lines
     count = lines.count()
     logger.info("Líneas de la canción del pirata: {}".format(count))
+
+    # Collect lines
+    collected_lines = lines.collect()
+    logger.info("Líneas de la canción del pirata: {}".format(len(collected_lines)))
+    logger.info("Primera línea de la canción del pirata: {}".format(collected_lines[0]))
+
+    # Take some lines
+    taken_lines = lines.take(4)
+    logger.info("Primera estrofa canción del pirata:")
+    for line in taken_lines:
+        logger.info("  {}".format(line))
+
+    # Map and filter data
+    filtered_lines = lines.filter(lambda l: "ñ" in l.lower())
+    mapped_filtered_lines = filtered_lines.map(lambda l: l.upper())
+    logger.info("Líneas transformadas de la canción del pirata:")
+    for line in mapped_filtered_lines.collect():
+        logger.info("  {}".format(line))
 
     # Count word frequency
     counts = (lines
@@ -33,10 +49,6 @@ def main():
               .sortBy(lambda r: -r[1]))
 
     logger.info("Frecuencia de palabras: {}".format(counts.collect()))
-
-    # Map and filter data
-    #pp_over_100 = elections_rdd.map(lambda Row(distrito, pp): pp).filter(lambda pp: pp > 100)
-    #pp_over_100.take(30)
 
 
 if __name__ == "__main__":
