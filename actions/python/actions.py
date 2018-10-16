@@ -11,13 +11,15 @@ def main():
     logger.info(u"Read csv files")
 
     # Create Spark Session
-    spark = SparkSession.builder.appName("Spark Course. Collect data").getOrCreate()
+    spark = SparkSession.builder.appName("Spark Course. Actions oveActions over").getOrCreate()
 
     # Read csv
     path = os.path.join("data", "EleccionesMadrid2016.csv")
     elections = spark.read.csv(path, header=True, inferSchema=True)
 
-    # Show data
+    # Count and Show data
+    count = elections.count()
+    logger.info("Tamaño de los datos leídos: {}".format(count))
     elections.show(10, truncate=False)
 
     # Take data

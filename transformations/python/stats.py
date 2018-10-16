@@ -3,13 +3,12 @@
 import os
 
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import max as pyspark_max
 
 from common.logger_configuration import logger
 
 
 def main():
-    logger.info(u"Actions")
+    logger.info(u"DataFrame transformations")
 
     # Create Spark Session
     spark = SparkSession.builder.appName("Spark Course. Compute stats").getOrCreate()
@@ -23,8 +22,7 @@ def main():
     elections.show()
 
     # Compute max of a selected column
-    max_agg = elections.agg(pyspark_max(elections.PP))
-    max_agg.show()
+    elections.describe().show()
 
 
 if __name__ == "__main__":
