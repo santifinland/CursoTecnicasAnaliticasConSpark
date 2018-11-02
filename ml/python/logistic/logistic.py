@@ -5,15 +5,16 @@ Técnicas analíticas con Spark y modelado predictivo
 """
 
 import logging
+import functools
 
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import LogisticRegression
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-from LoadCatastro import LoadCatastro
-from LoadElections import LoadElections
-from logger_configuration import LoggerManager
+from common.LoadCatastro import LoadCatastro
+from common.LoadElections import LoadElections
+from common.logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -79,7 +80,7 @@ def predict(spark, model):
 
 
 def maxvar(*cols):
-    return reduce(lambda a, b: a if a > b else b, cols)
+    return functools.reduce(lambda a, b: a if a > b else b, cols)
 
 
 if __name__ == "__main__":
@@ -93,5 +94,5 @@ if __name__ == "__main__":
         model_trained = train(spark_session)
         predict(spark_session, model_trained)
 
-    except Exception, e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+    except Exception as e:
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)

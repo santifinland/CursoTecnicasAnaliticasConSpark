@@ -5,15 +5,16 @@ Técnicas analíticas con Spark y modelado predictivo
 """
 
 import logging
+import functools
 
 from pyspark.ml.regression import LinearRegression
 from pyspark.ml.feature import VectorAssembler
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import *
 
-from LoadElections import LoadElections
-from LoadCatastro import LoadCatastro
-from logger_configuration import LoggerManager
+from common.LoadElections import LoadElections
+from common.LoadCatastro import LoadCatastro
+from common.logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -23,12 +24,12 @@ logger_spark = logging.getLogger('py4j')
 logger_spark.setLevel(logging.INFO)
 
 
-def train(sql_context):
+def train(spark):
 
-    logger.info(u"Entrenamiento de modelo de regresión")
+    logger.info(u"Linear regression")
 
     # Read Elections data and add PP percentage of votes by district
-    elections_raw = LoadElections().train(sql_context)
+    elections_raw = LoadElections().train(spark)
     add = udf(sumvar)
     numeric_columns = elections_raw.columns[1:]
     elections_total = elections_raw \
@@ -39,7 +40,7 @@ def train(sql_context):
     elections.show()
 
     # Read Catastro data
-    catastro = LoadCatastro().train(sql_context).select(
+    catastro = LoadCatastro().train(spark).select(
         expr("Distrito"),
         expr("ValorMedio"))
 
@@ -59,10 +60,10 @@ def train(sql_context):
     return model
 
 
-def predict(sql_context, model):
+def predict(spark, model):
     logger.info(u"Predicciones a partir de modelo de regresión")
 
-    elections_raw = LoadElections().test(sql_context)
+    elections_raw = LoadElections().test(spark)
     add = udf(sumvar)
     numeric_columns = elections_raw.columns[1:]
     elections_total = elections_raw \
@@ -72,7 +73,7 @@ def predict(sql_context, model):
         .select("Distrito", "label")
     elections.show()
 
-    catastro = LoadCatastro().test(sql_context)
+    catastro = LoadCatastro().test(spark)
     assembler = VectorAssembler(inputCols=["ValorMedio"], outputCol="features")
     catastro_df = assembler.transform(catastro)
     predictions = model.transform(catastro_df)
@@ -80,7 +81,7 @@ def predict(sql_context, model):
 
 
 def sumvar(*cols):
-    return reduce(lambda a, b: a + b, cols)
+    return functools.reduce(lambda a, b: a + b, cols)
 
 
 if __name__ == "__main__":
@@ -89,11 +90,9 @@ if __name__ == "__main__":
         logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
 
         # Create Spark session
-        spark = SparkSession.builder.appName("Edu").getOrCreate()
-
+        spark = SparkSession.builder.appName("Spark Course. Linear regression").getOrCreate()
         model_trained = train(spark)
-
         predict(spark, model_trained)
 
-    except Exception, e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+    except Exception as e:
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)

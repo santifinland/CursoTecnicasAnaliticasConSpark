@@ -11,8 +11,8 @@ class LoadCatastro(object):
 
     logger = logging.getLogger()
 
-    catastroTrainPath = "../../data/CatastroTrainMadrid2014.csv"
-    catastroTestPath = "../../data/CatastroTestMadrid2014.csv"
+    catastroTrainPath = "data/CatastroTrainMadrid2014.csv"
+    catastroTestPath = "data/CatastroTestMadrid2014.csv"
 
     def train(self, sql_context):
         return self.run(sql_context, self.catastroTrainPath)
