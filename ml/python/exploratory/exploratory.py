@@ -27,10 +27,10 @@ logger_spark.setLevel(logging.INFO)
 
 def main():
 
-    logger.info(u"Técnicas analíticas con Spark y modelado predictivo")
+    logger.info(u"Exploratory analysis")
 
     # Create Spark session
-    spark = SparkSession.builder.appName("Edu").getOrCreate()
+    spark = SparkSession.builder.appName("Spark Course. Exploratory analysis").getOrCreate()
 
     # Read data
     elections = LoadElections().all(spark)
@@ -97,5 +97,5 @@ if __name__ == "__main__":
     try:
         np.random.seed(0)
         main()
-    except Exception, e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+    except Exception as e:
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)

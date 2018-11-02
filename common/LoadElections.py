@@ -11,10 +11,10 @@ class LoadElections(object):
 
     logger = logging.getLogger()
 
-    electionsTrainPath = "../../data/EleccionesTrainMadrid2016.csv"
-    electionsTrainPathLibSvm = "../../data/EleccionesLibSvm.txt"
-    electionsTestPath = "../../data/EleccionesTestMadrid2016.csv"
-    electionsPath = "../../data/EleccionesMadrid2016.csv"
+    electionsTrainPath = "data/EleccionesTrainMadrid2016.csv"
+    electionsTrainPathLibSvm = "data/EleccionesLibSvm.txt"
+    electionsTestPath = "data/EleccionesTestMadrid2016.csv"
+    electionsPath = "data/EleccionesMadrid2016.csv"
 
     def train(self, spark):
         return self.run(spark, self.electionsTrainPath)
