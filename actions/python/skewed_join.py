@@ -8,7 +8,7 @@ from common.logger_configuration import logger
 def main():
     logger.info(u"Spark joins")
 
-    parallelism = 10
+    parallelism = 6
     shuffle_partitions = 5
     coalesce_partitions = 3
     coalesce_higher_partitions = 8
@@ -29,11 +29,18 @@ def main():
         Row("bob", "Madrid"),
         Row("pep", "Toledo"),
         Row("tip", "Madrid"),
+        Row("fox", "Madrid"),
+        Row("lee", "Avila"),
+        Row("noe", "Madrid"),
+        Row("ivy", "Madrid"),
+        Row("ben", "Barcelona"),
+        Row("eli", "Madrid"),
         Row("jon", "Madrid"),
         Row("tom", "Barcelona")
        ]
     city_df = spark.createDataFrame(city_data, ["name", "city"])
     print("Partitions: {}".format(city_df.rdd.getNumPartitions()))
+    print(city_df.rdd.glom().map(len).collect())
 
     # Build age data
     print("\nAir Quality data:")
@@ -41,10 +48,12 @@ def main():
     air_quality_data = [
         Row("Madrid", "bad"),
         Row("Toledo", "good"),
+        Row("Avila", "good"),
         Row("Barcelona", "bad")
     ]
     air_quality_df = spark.createDataFrame(air_quality_data, ["city", "air"])
     print("Partitions: {}".format(air_quality_df.rdd.getNumPartitions()))
+    print(air_quality_df.rdd.glom().map(len).collect())
 
     # Skewed join
     print("\nJoin:")
