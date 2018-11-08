@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pyspark.sql import Row, SparkSession
-from pyspark.sql.functions import udf
+from pyspark.sql.functions import col, udf
 from pyspark.sql.types import IntegerType
 
 from common.logger_configuration import logger
