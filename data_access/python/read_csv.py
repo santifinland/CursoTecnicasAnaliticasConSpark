@@ -17,6 +17,7 @@ def main():
     path = os.path.join("data", "EleccionesMadrid2016.csv")
     elections = spark.read.csv(path)
     elections.show()
+    print(elections.columns)
     elections.printSchema()
 
 
