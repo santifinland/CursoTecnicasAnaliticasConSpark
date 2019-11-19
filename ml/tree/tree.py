@@ -12,8 +12,8 @@ from pyspark.ml.feature import StringIndexer, VectorIndexer
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.sql import SparkSession
 
-from LoadElections import LoadElections
-from logger_configuration import LoggerManager
+from common.LoadElections import LoadElections
+from common.logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -77,5 +77,5 @@ if __name__ == "__main__":
 
         train(spark_session)
 
-    except Exception, e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+    except Exception as e:
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)

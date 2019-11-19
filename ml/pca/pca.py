@@ -14,7 +14,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql import DataFrame
 
 from common.LoadElections import LoadElections
-from logger_configuration import LoggerManager
+from common.logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -57,34 +57,34 @@ def train(spark):
     result.show(truncate=False)
 
 
-def transpose(x):
+def _sort_transpose_tuple(tup):
+    x, y = tup
+    return x, tuple(zip(*sorted(y, key=lambda v_k: v_k[1], reverse=False)))[0]
+
+
+def transpose(X):
     """Transpose a PySpark DataFrame.
 
     Parameters
     ----------
-    x : PySpark ``DataFrame``
+    X : PySpark ``DataFrame``
         The ``DataFrame`` that should be tranposed.
     """
     # validate
-    if not isinstance(x, DataFrame):
+    if not isinstance(X, DataFrame):
         raise TypeError('X should be a DataFrame, not a %s'
-                        % type(x))
+                        % type(X))
 
-    cols = x.columns
+    cols = X.columns
     n_features = len(cols)
 
     # Sorry for this unreadability...
-    return x.rdd.flatMap(  # make into an RDD
-        lambda xs: chain(xs)).zipWithIndex().groupBy(  # zip index
-        lambda (val, idx): idx % n_features).sortBy(  # group by index % n_features as key
-        lambda (grp, res): grp).map(  # sort by index % n_features key
-        lambda (grp, res): _sort_transpose_tuple((grp, res))).map(  # maintain order
-        lambda (key, col): col).toDF()  # return to DF
-
-
-def _sort_transpose_tuple(tup):
-    x, y = tup
-    return x, zip(*sorted(y, key=lambda (v, k): k, reverse=False))[0]
+    return X.rdd.flatMap( # make into an RDD
+        lambda xs: chain(xs)).zipWithIndex().groupBy( # zip index
+        lambda val_idx: val_idx[1] % n_features).sortBy( # group by index % n_features as key
+        lambda grp_res: grp_res[0]).map( # sort by index % n_features key
+        lambda grp_res: _sort_transpose_tuple(grp_res)).map( # maintain order
+        lambda key_col: key_col[1]).toDF() # return to DF
 
 
 if __name__ == "__main__":
@@ -97,5 +97,5 @@ if __name__ == "__main__":
 
         train(spark_session)
 
-    except Exception, e:
+    except Exception as e:
         logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
