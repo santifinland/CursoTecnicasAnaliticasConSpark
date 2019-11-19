@@ -10,8 +10,8 @@ from pyspark.ml.evaluation import RegressionEvaluator
 from pyspark.ml.recommendation import ALS
 from pyspark.sql import SparkSession
 
-from LoadRatings import LoadRatings
-from logger_configuration import LoggerManager
+from common.LoadRatings import LoadRatings
+from common.logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -30,13 +30,13 @@ def run(spark_session):
         .option("header", "true") \
         .option("delimiter", ",") \
         .option("inferSchema", "true") \
-        .load("../../data/ratingsppttrain.csv")
+        .load("../data/ratingsppttrain.csv")
     test = spark.read \
         .format("com.databricks.spark.csv") \
         .option("header", "true") \
         .option("delimiter", ",") \
         .option("inferSchema", "true") \
-        .load("../../data/ratingsppttest.csv")
+        .load("../data/ratingsppttest.csv")
 
     # Build the recommendation model using ALS on the training data
     als = ALS(maxIter=5,
@@ -73,5 +73,5 @@ if __name__ == "__main__":
 
         run(spark)
 
-    except Exception, e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+    except Exception as e:
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)
