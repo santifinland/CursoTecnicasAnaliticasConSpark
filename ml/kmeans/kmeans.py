@@ -11,8 +11,8 @@ from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import StandardScaler
 from pyspark.sql import SparkSession
 
-from LoadParties import LoadParties
-from logger_configuration import LoggerManager
+from common.LoadParties import LoadParties
+from common.logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -110,5 +110,5 @@ if __name__ == "__main__":
         model_trained = train(spark)
         predict(spark, model_trained)
 
-    except Exception, e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+    except Exception as e:
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)
