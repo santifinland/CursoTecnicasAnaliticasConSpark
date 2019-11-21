@@ -8,7 +8,6 @@ from common.logger_configuration import logger
 def main():
     logger.info(u"Read csv files")
 
-
     spark = SparkSession.builder.appName("Spark Course").getOrCreate()
 
     # Vertex DataFrame
@@ -34,6 +33,8 @@ def main():
     ], ["src", "dst", "relationship"])
     # Create a GraphFrame
     g = GraphFrame(v, e)
+    g.vertices.show()
+    g.edges.show()
 
 
 if __name__ == "__main__":

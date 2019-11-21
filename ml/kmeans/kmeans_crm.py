@@ -11,8 +11,8 @@ from pyspark.ml.clustering import KMeans
 from pyspark.ml.feature import StringIndexer
 from pyspark.sql import SparkSession
 
-from LoadCrm import LoadCrm
-from logger_configuration import LoggerManager
+from common.LoadCrm import LoadCrm
+from common.logger_configuration import LoggerManager
 
 
 # Get application logger
@@ -66,5 +66,5 @@ if __name__ == "__main__":
 
         run(spark)
 
-    except Exception, e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+    except Exception as e:
+        logger.error('Failed to execute process: {}'.format(e), exc_info=True)

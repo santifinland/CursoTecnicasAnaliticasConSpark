@@ -50,6 +50,7 @@ def train(spark):
     # Create Vector of features
     assembler = VectorAssembler(inputCols=["ValorMedio"], outputCol="features")
     assembled_df = assembler.transform(df)
+    assembled_df.show()
 
     # Create model
     lr = LinearRegression(maxIter=5, regParam=0.0, solver="normal")
