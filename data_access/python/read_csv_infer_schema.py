@@ -1,28 +1,34 @@
 # -*- coding: utf-8 -*-
 
-import os
+from typing import List
 
-from pyspark.sql import SparkSession
-
-from common.logger_configuration import logger
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.types import StructType
 
 
 def main():
-    logger.info(u"Read csv files with header")
+
+    print('Spark read DataFrames infer schema')
 
     # Create Spark Session
-    spark = SparkSession.builder.appName("Spark Course. Csv files infer schema").getOrCreate()
+    spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
 
-    # Read csv infering schema
-    path = os.path.join("data", "EleccionesMadrid2016.csv")
-    elections = spark.read.csv(path, header=True, inferSchema=True)
-    elections.show()
-    elections.printSchema()
-    elections.explain()
+    # Read data
+    cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, inferSchema=True)
+
+    # Print DataFrame properties
+    columns: List[str] = cdr.columns
+    print('Cdr DataFrame columns: {}'.format(columns))
+    schema: StructType = cdr.schema
+    print('Cdr DataFrame schema: {}'.format(schema))
+
+    # Show data and schema
+    cdr.show()
+    cdr.printSchema()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+        print('Failed to execute process: {}'.format(e))

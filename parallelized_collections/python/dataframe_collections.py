@@ -1,35 +1,31 @@
 # -*- coding: utf-8 -*-
 
-from pyspark.sql import Row, SparkSession
+from typing import List, Tuple
 
-from common.logger_configuration import logger
+from pyspark.sql import DataFrame, Row, SparkSession
 
 
 def main():
-    logger.info(u"Dataframe from collections")
+
+    print('Spark create DataFrame from collection')
 
     # Create Spark Session
-    spark = SparkSession.builder.appName("Spark Course. Dataframe from collections").getOrCreate()
+    spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
 
-    # Create a Dataframe from a collection
-    primes = [Row(2), Row(3), Row(5), Row(7), Row(11), Row(13), Row(17), Row(19), Row(23), Row(29)]
-    parallelized_primes = spark.createDataFrame(primes)
-    parallelized_primes.show()
+    # Create a DataFrame from a collection of Tuples
+    capitals: List[Tuple[str, str]] = [('Spain', 'Madrid'), ('Portugal', 'Lisbon')]
+    parallelize_capitals: DataFrame = spark.createDataFrame(capitals, schema=['Country', 'Capital'])
+    parallelize_capitals.show()
 
-    # Get number of partitions
-    prime_partitions = parallelized_primes.rdd.getNumPartitions()
-    logger.info("Parallelized primes partitions: {}".format(prime_partitions))
-
-    # Create an RDD setting the num of partitions
-    capitals = [("Spain", "Madrid"), ("Portugal", "Lisbon")]
-    parallelized_capitals = spark.createDataFrame(capitals, ["Country", "Capital"])
-    parallelized_capitals.show()
-    capitals_partitions = parallelized_capitals.rdd.getNumPartitions()
-    logger.info("Parallelized capitals partitions: {}".format(capitals_partitions))
+    # Create a DataFrame from a collection of Rows
+    primes: List[int] = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+    row_primes: List[Row] = list(map(lambda x: Row(x), primes))
+    parallelize_primes: DataFrame = spark.createDataFrame(row_primes)
+    parallelize_primes.show()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e), exc_info=True)
+        print('Failed to execute process: {}'.format(e))

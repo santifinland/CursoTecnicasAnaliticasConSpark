@@ -8,13 +8,13 @@ from pyspark.sql.types import StructType
 
 def main():
 
-    print('Spark read DataFrames with header')
+    print('Spark read DataFrames')
 
     # Create Spark Session
     spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
 
     # Read data
-    cdr: DataFrame = spark.read.option('header', 'true').csv('data/call_cdr/year=1924/month=04/day=19')
+    cdr: DataFrame = spark.read.load(path='data/call_cdr/year=1924/month=04/day=19', format='csv')
 
     # Print DataFrame properties
     columns: List[str] = cdr.columns

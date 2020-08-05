@@ -14,7 +14,11 @@ def main():
     spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
 
     # Read data
-    cdr: DataFrame = spark.read.option('header', 'true').csv('data/call_cdr/year=1924/month=04/day=19')
+    cdr: DataFrame = (spark
+                      .read
+                      .option('header', 'true')
+                      .option('delimiter', ',')
+                      .csv('data/call_cdr/year=1924/month=04/day=19'))
 
     # Print DataFrame properties
     columns: List[str] = cdr.columns
