@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.functions import col
 from pyspark.sql.types import *
 
 
 def main():
 
-    print('Spark DataFrame describe')
+    print('Spark DataFrame filter')
 
     # Create Spark Session
     spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
@@ -23,13 +24,17 @@ def main():
     # Read csv injecting schema
     cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
 
-    # Describe 2 columns of the data
-    describe_result: DataFrame = cdr.describe(['CALLED', 'DURATION'])
-    describe_result.show()
+    # Filter international calls
+    international_cdr: DataFrame = cdr.filter(col('INTERNATIONAL'))
+    international_cdr.show()
 
-    # Describe all columns of the data
-    describe_result_all: DataFrame = cdr.describe()
-    describe_result_all.show()
+    # Filter long calls
+    long_cdr: DataFrame = cdr.filter(cdr.DURATION > 60)
+    long_cdr.show()
+
+    # Filter free calls
+    free_cdr: DataFrame = cdr.filter('PRICE = 0.0')
+    free_cdr.show()
 
 
 if __name__ == '__main__':

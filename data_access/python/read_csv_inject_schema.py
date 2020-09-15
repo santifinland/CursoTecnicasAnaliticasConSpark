@@ -15,7 +15,7 @@ def main():
     schema: StructType = StructType([
         StructField('CALLER', StringType(), False),
         StructField('CALLED', StringType(), False),
-        StructField('DATA', DateType(), True),
+        StructField('DATE', DateType(), True),
         StructField('DURATION', IntegerType(), True),
         StructField('PRICE', DoubleType(), True),
         StructField('INTERNATIONAL', BooleanType(), True)])

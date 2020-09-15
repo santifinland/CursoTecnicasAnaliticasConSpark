@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from pyspark.sql import DataFrame, SparkSession
+from typing import List
+
+from pyspark.sql import DataFrame, Row, SparkSession
 from pyspark.sql.types import *
 
 
 def main():
 
-    print('Spark DataFrame describe')
+    print('Spark DataFrame collect')
 
     # Create Spark Session
     spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
@@ -21,15 +23,13 @@ def main():
         StructField('INTERNATIONAL', BooleanType(), True)])
 
     # Read csv injecting schema
-    cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
+    distributed_cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
 
-    # Describe 2 columns of the data
-    describe_result: DataFrame = cdr.describe(['CALLED', 'DURATION'])
-    describe_result.show()
-
-    # Describe all columns of the data
-    describe_result_all: DataFrame = cdr.describe()
-    describe_result_all.show()
+    # Collect all data
+    cdr: List[Row] = distributed_cdr.collect()
+    print('List of CDR Rows: {}'.format(cdr))
+    print('A CDR: {}'.format(cdr[0]))
+    print('A CDR caller: {}'.format(cdr[0]['CALLER']))
 
 
 if __name__ == '__main__':

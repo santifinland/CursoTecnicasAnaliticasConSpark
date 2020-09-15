@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.functions import col
 from pyspark.sql.types import *
 
 
 def main():
 
-    print('Spark DataFrame describe')
+    print('Spark DataFrame withColumn')
 
     # Create Spark Session
     spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
@@ -22,14 +23,15 @@ def main():
 
     # Read csv injecting schema
     cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
+    cdr.show()
 
-    # Describe 2 columns of the data
-    describe_result: DataFrame = cdr.describe(['CALLED', 'DURATION'])
-    describe_result.show()
+    # Add fixed amount to price. Using col function to select column data
+    cdr_total_price: DataFrame = cdr.withColumn('TOTAL_PRICE', 5 + col('PRICE'))
+    cdr_total_price.show()
 
-    # Describe all columns of the data
-    describe_result_all: DataFrame = cdr.describe()
-    describe_result_all.show()
+    # Add NATIONAL column
+    cdr_national: DataFrame = cdr.withColumn('NATIONAL', ~col('INTERNATIONAL'))
+    cdr_national.show()
 
 
 if __name__ == '__main__':

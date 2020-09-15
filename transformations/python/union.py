@@ -6,7 +6,7 @@ from pyspark.sql.types import *
 
 def main():
 
-    print('Spark DataFrame describe')
+    print('Spark DataFrame union')
 
     # Create Spark Session
     spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
@@ -23,13 +23,17 @@ def main():
     # Read csv injecting schema
     cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
 
-    # Describe 2 columns of the data
-    describe_result: DataFrame = cdr.describe(['CALLED', 'DURATION'])
-    describe_result.show()
+    # Select CALLER column
+    caller: DataFrame = cdr.select(['CALLER'])
+    caller.show()
 
-    # Describe all columns of the data
-    describe_result_all: DataFrame = cdr.describe()
-    describe_result_all.show()
+    # Select CALLED column
+    called: DataFrame = cdr.select(['CALLED'])
+    called.show()
+
+    # Union CALLER and CALLED columns
+    people: DataFrame = caller.union(called)
+    people.show()
 
 
 if __name__ == '__main__':
