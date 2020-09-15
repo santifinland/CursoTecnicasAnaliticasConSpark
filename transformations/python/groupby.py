@@ -1,43 +1,51 @@
 # -*- coding: utf-8 -*-
 
-import os
-
-from pyspark.sql import SparkSession
-import pyspark.sql.functions as f
-
-from common.logger_configuration import logger
+from pyspark.sql import DataFrame, GroupedData, SparkSession
+from pyspark.sql.functions import col
+from pyspark.sql.types import *
 
 
 def main():
-    logger.info(u"DataFrame Transformations")
+
+    print('Spark DataFrame groupby')
 
     # Create Spark Session
-    spark = SparkSession.builder.appName("Spark Course. Group by").getOrCreate()
+    spark: SparkSession = SparkSession.builder.appName('Spark Course').getOrCreate()
 
-    # Read csv
-    path = os.path.join(os.environ["HOME"], "data", "weblogs")
-    weblogs = spark.read.csv(path, header=True, inferSchema=True)
+    # Define schema of the data
+    schema: StructType = StructType([
+        StructField('CALLER', StringType(), False),
+        StructField('CALLED', StringType(), False),
+        StructField('DATE', DateType(), True),
+        StructField('DURATION', IntegerType(), True),
+        StructField('PRICE', DoubleType(), True),
+        StructField('INTERNATIONAL', BooleanType(), True)])
 
-    # Compute total number of http answers per typ
-    answer_types = weblogs \
-        .groupBy("co_estado_http") \
-        .count() \
-        .collect()
-    for answer_type in answer_types:
-        logger.info("{}".format(answer_type))
-#
-    # Compute avg and std of both data uploaded and downloaded per user
-    up_down_stats = weblogs \
-        .groupBy("in_https") \
-        .agg(f.avg("ca_vol_up"), f.stddev("ca_vol_up"), f.avg("ca_vol_dw"), f.stddev("ca_vol_dw")) \
-        .collect()
-    for stat in up_down_stats:
-        logger.info("HTTPS: {}, Up mean: {}, Down mean: {}, Up std: {}, Down std: {}"
-                    .format(stat[0], stat[1], stat[2], stat[3], stat[4]))
+    # Read csv injecting schema
+    cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
+    cdr.show()
 
 
-if __name__ == "__main__":
+    # Group calls by International flag
+    international_groups: GroupedData = cdr.groupBy(col('INTERNATIONAL'))
+    print(international_groups)
+
+    # Aggregate mean price column in the International grouped calls
+    international_prices: DataFrame = international_groups.mean('PRICE')
+    international_prices.show()
+
+    # Aggregate at the same time, mean price and mean duration in the International grouped calls
+    international_duration_prices: DataFrame = international_groups.mean('DURATION', 'PRICE')
+    international_duration_prices.show()
+
+
+    # Group by CALLER and CALLED at the same time, and aggregate duration
+    calls: DataFrame = cdr.groupBy([col('CALLER'), col('CALLED')]).max('DURATION')
+    calls.show()
+
+
+if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e), exc_info=True)
+        print('Failed to execute process: {}'.format(e))
