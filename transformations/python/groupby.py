@@ -25,7 +25,6 @@ def main():
     cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
     cdr.show()
 
-
     # Group calls by International flag
     international_groups: GroupedData = cdr.groupBy(col('INTERNATIONAL'))
     print(international_groups)
@@ -37,7 +36,6 @@ def main():
     # Aggregate at the same time, mean price and mean duration in the International grouped calls
     international_duration_prices: DataFrame = international_groups.mean('DURATION', 'PRICE')
     international_duration_prices.show()
-
 
     # Group by CALLER and CALLED at the same time, and aggregate duration
     calls: DataFrame = cdr.groupBy([col('CALLER'), col('CALLED')]).max('DURATION')
