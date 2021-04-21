@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from pyspark.sql import Row, SparkSession
-from pyspark.sql.functions import col, udf
+from pyspark.sql.functions import udf
 from pyspark.sql.types import IntegerType
-
-from common.logger_configuration import logger
 
 
 def main():
-    logger.info(u"User Defined Functions")
+
+    print('User Defined Functions')
 
     # Create Spark Session
-    spark = SparkSession.builder.appName("Spark Course. User Defined Functions").getOrCreate()
+    spark = SparkSession.builder.appName('Spark Course').getOrCreate()
 
     # Create a Dataframe from a collection
     primes = [Row(2), Row(3), Row(5), Row(7), Row(11), Row(13), Row(17), Row(19), Row(23), Row(29)]
@@ -30,4 +29,4 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e), exc_info=True)
+        print('Failed to execute process: {}'.format(e))

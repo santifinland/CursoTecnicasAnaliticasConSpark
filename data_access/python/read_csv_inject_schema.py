@@ -13,12 +13,12 @@ def main():
 
     # Define schema of the data
     schema: StructType = StructType([
-        StructField('CALLER', StringType(), False),
-        StructField('CALLED', StringType(), False),
-        StructField('DATE', DateType(), True),
-        StructField('DURATION', IntegerType(), True),
-        StructField('PRICE', DoubleType(), True),
-        StructField('INTERNATIONAL', BooleanType(), True)])
+        StructField('CALLER', StringType(), nullable=False),
+        StructField('CALLED', StringType(), nullable=False),
+        StructField('DATE', DateType(), nullable=True),
+        StructField('DURATION', IntegerType(), nullable=True),
+        StructField('PRICE', DoubleType(), nullable=True),
+        StructField('INTERNATIONAL', BooleanType(), nullable=True)])
 
     # Read csv injecting schema
     cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
