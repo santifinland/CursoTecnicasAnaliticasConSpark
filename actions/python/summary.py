@@ -24,7 +24,7 @@ def main():
     cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=schema)
 
     # Compute mean and 80 percentile
-    summary: DataFrame = cdr.summary(['mean', '80%'])
+    summary: DataFrame = cdr.summary(['mean', '80%', '15%'])
     summary.show()
 
 
