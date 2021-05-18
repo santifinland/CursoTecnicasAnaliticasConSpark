@@ -15,7 +15,7 @@ def main():
     cdr: DataFrame = spark.read.load(path=path, format='csv', header=True, inferSchema=True)
 
     # Show data and schema
-    cdr.show()
+    cdr.orderBy('PRICE').show()
     cdr.printSchema()
 
 
