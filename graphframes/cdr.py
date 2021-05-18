@@ -18,7 +18,7 @@ def main():
     # Vertex DataFrame
     v_out = cdr.select(col("PHONE_1_ID").alias("id"))
     v_in = cdr.select(col("PHONE_2_ID").alias("id"))
-    vertex = v_out.union(v_in)
+    vertex = v_out.union(v_in).distinct()
     vertex.show()
 
     # Edge DataFrame
@@ -32,6 +32,7 @@ def main():
     g.inDegrees.show()
     g.outDegrees.show()
     page_rank = g.pageRank(resetProbability=0.15, maxIter=1)
+    page_rank.vertex.show()
     page_rank.edges.show()
 
 
