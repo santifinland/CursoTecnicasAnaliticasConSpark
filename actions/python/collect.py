@@ -27,9 +27,9 @@ def main():
 
     # Collect all data
     cdr: List[Row] = distributed_cdr.collect()
-    print('List of CDR Rows: {}'.format(cdr))
-    print('A CDR: {}'.format(cdr[0]))
-    print('A CDR caller: {}'.format(cdr[0]['CALLER']))
+    print('List of CDR Rows: {}\n'.format(cdr))
+    print('A CDR: {}\n'.format(cdr[0]))
+    print('A CDR caller: {}\n'.format(cdr[0]['CALLER']))
 
 
 if __name__ == '__main__':
