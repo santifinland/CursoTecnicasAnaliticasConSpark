@@ -31,7 +31,7 @@ def main():
 
     # Collect callers as a list
     callers_list: List[str] = [row.CALLER for row in callers.collect()]
-    print('Callers in CDR: {}'.format(callers_list))
+    print('Callers in CDR: {}'.format(sorted(callers_list)))
 
 
 if __name__ == '__main__':
