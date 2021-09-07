@@ -31,10 +31,14 @@ def main():
                                   .filter(col('INTERNATIONAL'))
                                   .withColumn('CALLER_NAME_LENGTH', length('CALLER')))
     transformed_cdr.show()
+    print('Number of rows in transformed_cdr: {}'.format(transformed_cdr.count()))
+    print('Number of distinct rows in transformed_cdr: {}\n\n'.format(transformed_cdr.distinct().count()))
 
     # Drop duplicates for entire Rows
     unique_cdr: DataFrame = transformed_cdr.dropDuplicates()
     unique_cdr.show()
+    print('Number of rows in unique_cdr: {}'.format(unique_cdr.count()))
+    print('Number of distinct rows in unique_cdr: {}\n\n'.format(unique_cdr.distinct().count()))
 
     # Drop duplicates for certain Columns
     unique_cdr_international: DataFrame = transformed_cdr.dropDuplicates(subset=['INTERNATIONAL'])
