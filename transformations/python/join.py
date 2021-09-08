@@ -24,6 +24,7 @@ def main():
 
     # Read csv injecting schema
     cdr: DataFrame = spark.read.csv('data/call_cdr/year=1924/month=04/day=19', header=True, schema=cdr_schema)
+    cdr.show()
 
     # Create DataFrame with CALLERs information
     people_schema: StructType = StructType([
@@ -35,6 +36,7 @@ def main():
         ('pep', 'Toledo', 48),
         ('tom', 'Madrid', 36)]
     people: DataFrame = spark.createDataFrame(people_data, schema=people_schema)
+    people.show()
 
     # Join CDR and people information
     caller: DataFrame = cdr.join(people, on=cdr['CALLER'] == people['NAME'], how='inner')
