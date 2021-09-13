@@ -2,14 +2,13 @@
 
 from pyspark.sql import Row, SparkSession
 
-from common.logger_configuration import logger
-
 
 def main():
-    logger.info(u"Spark joins")
+
+    print(u"Spark skewed joins")
 
     parallelism = 6
-    shuffle_partitions = 5
+    shuffle_partitions = 10
     coalesce_partitions = 3
     coalesce_higher_partitions = 8
     repartition_partitions = 3
@@ -38,7 +37,8 @@ def main():
         Row("jon", "Madrid"),
         Row("tom", "Barcelona")
        ]
-    city_df = spark.createDataFrame(city_data, ["name", "city"])
+    city_df = spark.createDataFrame(city_data, ["NAME", "CITY"])
+    city_df.show()
     print("Partitions: {}".format(city_df.rdd.getNumPartitions()))
     print(city_df.rdd.glom().map(len).collect())
 
@@ -51,14 +51,16 @@ def main():
         Row("Avila", "good"),
         Row("Barcelona", "bad")
     ]
-    air_quality_df = spark.createDataFrame(air_quality_data, ["city", "air"])
+    air_quality_df = spark.createDataFrame(air_quality_data, ["CITY", "AIR"])
+    air_quality_df.show()
     print("Partitions: {}".format(air_quality_df.rdd.getNumPartitions()))
     print(air_quality_df.rdd.glom().map(len).collect())
 
     # Skewed join
     print("\nJoin:")
     print("------------------------------")
-    skewed = city_df.join(air_quality_df, on="city")
+    skewed = city_df.join(air_quality_df, on="CITY")
+    skewed.show()
     print("Partitions: {}".format(skewed.rdd.getNumPartitions()))
     print(skewed.rdd.glom().map(len).collect())
 
