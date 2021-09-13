@@ -90,4 +90,4 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e), exc_info=True)
+        print('Failed to execute process: {}'.format(e))
