@@ -4,17 +4,15 @@ import os
 
 from pyspark.sql import SparkSession
 
-from common.logger_configuration import logger
-
 
 def main():
-    logger.info(u"Accumulator basic usage")
+    print('Accumulator basic usage')
 
     # Create Spark Session
-    spark = SparkSession.builder.appName("Spark Course. Accumulator basic usage").getOrCreate()
+    spark = SparkSession.builder.appName('Spark Course. Accumulator basic usage').getOrCreate()
 
     # Read csv
-    path = os.path.join("data", "CatastroMadrid2014.csv")
+    path = os.path.join('data', 'CatastroMadrid2014.csv')
     cadastre = spark.read.csv(path, header=True, inferSchema=True)
 
     # Compute number of districts with average land price about 100 euros / squared meter
@@ -22,11 +20,11 @@ def main():
     districts_above_100 = spark.sparkContext.accumulator(initial_value)
     cadastre.show()
     cadastre.select('ValorMedio').foreach(lambda d: districts_above_100.add(1 if d[0] > 100.0 else 0))
-    logger.info('Districts above 100 euros / squared meter: {}'.format(districts_above_100.value))
+    print('Districts above 100 euros / squared meter: {}'.format(districts_above_100.value))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         main()
     except Exception as e:
-        logger.error('Failed to execute process: {}'.format(e.message), exc_info=True)
+        print('Failed to execute process: {}'.format(e))
