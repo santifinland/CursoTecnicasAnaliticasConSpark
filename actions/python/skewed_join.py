@@ -19,6 +19,7 @@ def main():
         .config("spark.default.parallelism", parallelism) \
         .config("spark.sql.shuffle.partitions", shuffle_partitions) \
         .config("spark.sql.adaptive.coalescePartitions.enabled", "false") \
+        .config("spark.sql.autoBroadcastJoinThreshold", "-1") \
         .appName("Spark Course. Spark skewed joins").getOrCreate()
 
     # Build city data
