@@ -18,7 +18,7 @@ def main():
     # Compute number of districts with average land price about 100 euros / squared meter
     initial_value = 0
     districts_above_100 = spark.sparkContext.accumulator(initial_value)
-    cadastre.show()
+    cadastre.show(100, trucate=False)
     cadastre.select('ValorMedio').foreach(lambda d: districts_above_100.add(1 if d[0] > 100.0 else 0))
     print('Districts above 100 euros / squared meter: {}'.format(districts_above_100.value))
 
