@@ -29,30 +29,24 @@ def main():
     city.show()
 
     # a) How many Calls are issued from Madrid?
-    #res_a: DataFrame = (cdr
-                           #.join(city, on=______)
-                           #._________
-                           #.count())
-    #res_a.show()
+    res_a: DataFrame = (cdr
+                        .join(city, on=______)
+                        ._________
+                        .count())
+    res_a.show()
 
     # b) How many people are issuing calls from Barcelona?
-    #res_b: DataFrame = (cdr
-                        #.select(______)
-                        #.distinct()
-                        #.join(city, on=____________________)
-                        #.groupBy(_____)
-                        #.count())
-    #res_b.show()
+    res_b: DataFrame = (cdr
+                        .select(______)
+                        .distinct()
+                        .join(city, on=____________________)
+                        .groupBy(_____)
+                        .count())
+    res_b.show()
 
     # c) How many people are issuing calls from Avila?
-
-    # d) How many calls are
-    (cdr
-     .filter(cdr['DURATION'] > 60)
-     .filter(cdr['INTERNATIONAL'])
-     .select('CALLED')
-     .distinct()
-     .show())
+    res_c: DataFrame = _____
+    res_c.show()
 
 
 
