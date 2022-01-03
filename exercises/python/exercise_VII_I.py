@@ -49,7 +49,6 @@ def main():
     res_c.show()
 
 
-
 if __name__ == "__main__":
     try:
         main()
