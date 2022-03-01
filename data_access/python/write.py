@@ -24,8 +24,8 @@ def main():
 
     # Modify data
     callers: DataFrame = (cdr
-                          .filter(col('DURATION') > 60)  # Filter cdrs (narrow transformation: task)
-                          .select('CALLER').distinct())  # Compute distinct callers (wide transformation: stage)
+                          .filter(col('DURATION') > 60)        # Filter rows (narrow transformation)
+                          .select('CALLER', 'INTERNATIONAL'))  # Select columns (narrow transformation)
 
     # Write data
     (callers
