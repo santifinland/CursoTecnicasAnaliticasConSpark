@@ -30,8 +30,7 @@ def main():
     # Write data
     (callers
      .write
-     .option("mode", "overwrite")
-     .csv('output', header=True))
+     .csv('output', header=True, mode="overwrite"))
 
 
 if __name__ == '__main__':
